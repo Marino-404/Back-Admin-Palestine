@@ -49,7 +49,7 @@ export class UsersService {
           to: [userData.email],
           subject: '¡Bienvenid@ a Connect Palestine! 🇵🇸 🌍',
           html: `<div style="width:100%; max-width:500px; padding:4px; border-radius:6px; font-size:14px; font-family:Arial, Helvetica, sans-serif;">
-          <img style="width:50%;" src="${process.env.PRODUCTION_URL ? process.env.PRODUCTION_URL : process.env.DEV_URL}/public/logo.png" alt="Logo Connect Palestine" style="width:100px; margin-bottom:16px; margin:auto;">
+          <img style="width:50%; margin:auto;" src="${process.env.PRODUCTION_URL ? process.env.PRODUCTION_URL : process.env.DEV_URL}/public/logo.png" alt="Logo Connect Palestine" >
           <div style="width:100%; margin:auto;">
             <h2 style=" font-size:18px; width:100%;">Hola <strong>${userData.name}</strong></h2>
             <p style="margin-top:0px; margin-bottom:8px;">¡Gracias por unirte a Connect Palestine! Estamos encantados de que formes parte de nuestra comunidad, un espacio digital donde la cultura, historia y actualidad de Palestina encuentran su voz.</p>
@@ -169,7 +169,7 @@ export class UsersService {
         to: userEmail,
         subject: subject,
         html: `<div style="width:100%; max-width:500px; padding:4px; border-radius:6px; font-size:14px; font-family:Arial, Helvetica, sans-serif;">
-          <img style="width:50%;" src="${process.env.PRODUCTION_URL ? process.env.PRODUCTION_URL : process.env.DEV_URL}/public/logo.png" alt="Logo Connect Palestine" style="width:100px; margin-bottom:16px; margin:auto;">
+          <img style="width:50%; margin:auto;" src="${process.env.PRODUCTION_URL ? process.env.PRODUCTION_URL : process.env.DEV_URL}/public/logo.png" alt="Logo Connect Palestine" >
           <div style="width:100%; margin:auto;">
             <h2 style=" font-size:18px; width:100%;">${title}</h2>
             ${message
