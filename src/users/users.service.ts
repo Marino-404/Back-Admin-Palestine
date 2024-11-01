@@ -258,7 +258,7 @@ export class UsersService {
         bcc: mails,
         subject: subject,
         html: `<div style="width:100%; max-width:500px; padding:4px; border-radius:6px; font-size:14px; font-family:Arial, Helvetica, sans-serif; margin:auto;">
-          <img style="width:50%; margin:auto;" src="${process.env.PRODUCTION_URL ? process.env.PRODUCTION_URL : process.env.DEV_URL}/public/logo.png" alt="Logo Connect Palestine">
+          <div style="text-align:center;"><img style="width:50%;" src="${process.env.PRODUCTION_URL ? process.env.PRODUCTION_URL : process.env.DEV_URL}/public/logo.png" alt="Logo Connect Palestine" ></div>
           <div style="width:100%; margin:auto;">
             <h2 style=" font-size:18px; width:100%;">${title}</h2>
             <p style="margin-top:0px; margin-bottom:8px;">${message}</p>
