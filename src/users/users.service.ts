@@ -10,11 +10,31 @@ export class UsersService {
   async create(userData: User) {
     try {
       console.log(userData);
+      const userExists = await this.prisma.user.findUnique({
+        where: {
+          email: userData.email,
+        },
+      });
+      if (userExists && userData.messages.length > 0) {
+        await this.prisma.user.update({
+          where: {
+            email: userData.email,
+          },
+          data: {
+            messages: [...userExists.messages, userData.messages as string],
+          },
+        });
+        return {
+          status: 200,
+          message: 'User messages updated successfully',
+        };
+      }
       const newUser = await this.prisma.user.create({
         data: {
           name: userData.name,
           email: userData.email,
           number: userData.number ? userData.number : '',
+          messages: userData.messages ? [userData.messages as string] : [],
           createdAt: new Date(),
         },
       });
@@ -25,10 +45,21 @@ export class UsersService {
         const resend = new Resend(process.env.RESEND_API_KEY);
 
         const { data, error } = await resend.emails.send({
-          from: `${process.env.FROM} <${process.env.FROM_EMAIL}>`,
+          from: `Palestine community <conectados@connectpalestine.org>`,
           to: [userData.email],
-          subject: 'Welcome message',
-          html: `<strong>Welcome message</strong>`,
+          subject: '¡Bienvenid@ a Connect Palestine! 🇵🇸 🌍',
+          html: `<div style="width:100%; max-width:500px; padding:4px; border-radius:6px; font-size:14px; font-family:Arial, Helvetica, sans-serif;">
+          <img style="width:50%;" src="${process.env.PRODUCTION_URL ? process.env.PRODUCTION_URL : process.env.DEV_URL}/public/logo.png" alt="Logo Connect Palestine" style="width:100px; margin-bottom:16px; margin:auto;">
+          <div style="width:100%; margin:auto;">
+            <h2 style=" font-size:18px; width:100%;">Hola <strong>${userData.name}</strong></h2>
+            <p style="margin-top:0px; margin-bottom:8px;">¡Gracias por unirte a Connect Palestine! Estamos encantados de que formes parte de nuestra comunidad, un espacio digital donde la cultura, historia y actualidad de Palestina encuentran su voz.</p>
+            <p style="margin-top:0px; margin-bottom:8px;">Como suscriptor, recibirás nuestras últimas actualizaciones sobre películas, series, arte, gastronomía, música, y mucho más conectado con Palestina. También te mantendremos al tanto de eventos y proyectos especiales, para que no te pierdas ninguna oportunidad de conectar y ser parte de esta red de apoyo y difusión.</p>
+            <p style="margin-top:0px; margin-bottom:8px;">Si tienes preguntas o sugerencias, no dudes en escribirnos. Nos encantaría saber cómo podemos mejorar tu experiencia en Connect Palestine.</p>
+            <p style="margin-top:0px; margin-bottom:8px;">¡Gracias por sumarte! Nos vemos pronto en tu bandeja de entrada.</p>
+            <p style="margin-top:0px; margin-bottom:8px; width:100%; ">Un fuerte saludo, El equipo de Connect Palestine</p>
+            <p style="margin-top:0px; margin-bottom:8px; width:100%; text-align:end;">by <a href="https://instagram.com/palestinosrosario" target="_blank">@palestinosrosario</a></p>
+          </div>
+          </div>`,
         });
 
         if (error) {
@@ -92,11 +123,11 @@ export class UsersService {
     }
   }
 
-  update(id: number, updatedUserData: User) {
+  async update(updatedUserData: User) {
     try {
-      this.prisma.user.update({
+      await this.prisma.user.update({
         where: {
-          id: id,
+          id: updatedUserData.id,
         },
         data: {
           name: updatedUserData.name,
@@ -113,6 +144,62 @@ export class UsersService {
       return {
         status: 500,
         message: 'Error updating user',
+      };
+    }
+  }
+
+  async responseEmail({
+    subject,
+    title,
+    message,
+    userEmail,
+    userMessage,
+  }: {
+    subject: string;
+    title: string;
+    message: string;
+    userEmail: string;
+    userMessage: string;
+  }) {
+    try {
+      const resend = new Resend(process.env.RESEND_API_KEY);
+
+      const { data, error } = await resend.emails.send({
+        from: `Palestine community <conectados@connectpalestine.org>`,
+        to: userEmail,
+        subject: subject,
+        html: `<div style="width:100%; max-width:500px; padding:4px; border-radius:6px; font-size:14px; font-family:Arial, Helvetica, sans-serif;">
+          <img style="width:50%;" src="${process.env.PRODUCTION_URL ? process.env.PRODUCTION_URL : process.env.DEV_URL}/public/logo.png" alt="Logo Connect Palestine" style="width:100px; margin-bottom:16px; margin:auto;">
+          <div style="width:100%; margin:auto;">
+            <h2 style=" font-size:18px; width:100%;">${title}</h2>
+            ${message
+              .split('\n')
+              .map((line) => `<p style="margin-top:0px; margin-bottom:8px;">${line}</p>`)
+              .join('')}
+            <p style="margin-top:0px; margin-bottom:8px; width:100%; text-align:end;">by <a href="https://instagram.com/palestinosrosario" target="_blank">@palestinosrosario</a></p>
+          </div>
+          </div> `,
+      });
+
+      if (error) {
+        console.log(error);
+        return {
+          status: 500,
+          message: 'Error enviando correo',
+        };
+      } else {
+        console.log({ data });
+      }
+
+      return {
+        status: 200,
+        message: 'Se envio el correo correctamente',
+      };
+    } catch (e) {
+      console.log(e);
+      return {
+        status: 500,
+        message: 'Error enviando correo',
       };
     }
   }
@@ -139,16 +226,22 @@ export class UsersService {
 
   async sendEmailToAll({
     subject,
+    title,
     message,
+    emails,
   }: {
     subject: string;
+    title: string;
     message: string;
+    emails: string[] | null;
   }) {
     try {
-      const mails = (await this.prisma.user.findMany()).map(
-        (user) => user.email,
-      );
+      let mails = (await this.prisma.user.findMany()).map((user) => user.email);
       console.log(mails);
+
+      if (emails && emails.length > 0) {
+        mails = emails;
+      }
 
       if (mails.length === 0) {
         return {
@@ -160,11 +253,18 @@ export class UsersService {
       const resend = new Resend(process.env.RESEND_API_KEY);
 
       const { data, error } = await resend.emails.send({
-        from: `${process.env.FROM} <${process.env.FROM_EMAIL}>`,
+        from: `Palestine community <conectados@connectpalestine.org>`,
         to: 'info@connectpalestine.org',
         bcc: mails,
         subject: subject,
-        html: `<strong>${message}</strong>`,
+        html: `<div style="width:100%; max-width:500px; padding:4px; border-radius:6px; font-size:14px; font-family:Arial, Helvetica, sans-serif; margin:auto;">
+          <img style="width:50%; margin:auto;" src="${process.env.PRODUCTION_URL ? process.env.PRODUCTION_URL : process.env.DEV_URL}/public/logo.png" alt="Logo Connect Palestine">
+          <div style="width:100%; margin:auto;">
+            <h2 style=" font-size:18px; width:100%;">${title}</h2>
+            <p style="margin-top:0px; margin-bottom:8px;">${message}</p>
+            <p style="margin-top:0px; margin-bottom:8px; width:100%; text-align:end;">by <a href="https://instagram.com/palestinosrosario" target="_blank">@palestinosrosario</a></p>
+          </div>
+          </div> `,
       });
 
       if (error) {

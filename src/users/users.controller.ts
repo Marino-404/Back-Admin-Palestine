@@ -19,11 +19,29 @@ export class UsersController {
     return this.usersService.create(userData);
   }
 
+  @Post('/response')
+  responseEmail(
+    @Body() data: { subject: string; title: string; message: string; userEmail: string, userMessage: string },
+  ) {
+    return this.usersService.responseEmail(data);
+  }
+
   @Post('sendEmailToAll')
   sendEmailToAll(
-    @Body() { subject, message }: { subject: string; message: string },
+    @Body()
+    {
+      subject,
+      title,
+      message,
+      emails,
+    }: {
+      subject: string;
+      title: string;
+      message: string;
+      emails: string[];
+    },
   ) {
-    return this.usersService.sendEmailToAll({ subject, message });
+    return this.usersService.sendEmailToAll({ subject, title, message, emails });
   }
 
   @Get()
@@ -36,16 +54,14 @@ export class UsersController {
     return this.usersService.findOne(Number(id));
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updatedUserData: User) {
-    return this.usersService.update(Number(id), updatedUserData);
+  @Patch()
+  update(@Body() updatedUserData: User) {
+    return this.usersService.update(updatedUserData);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    console.log(id);
-    const res=this.usersService.remove(Number(id))
-    console.log(res)
-    return res
+    const res = this.usersService.remove(Number(id));
+    return res;
   }
 }

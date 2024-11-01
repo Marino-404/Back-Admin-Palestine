@@ -19,5 +19,6 @@ model User {
   email String @unique
   name  String
   number String
+  messages String[]
   createdAt DateTime @default(now())
 }
