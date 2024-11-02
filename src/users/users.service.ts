@@ -174,7 +174,10 @@ export class UsersService {
             <h2 style=" font-size:18px; width:100%;">${title}</h2>
             ${message
               .split('\n')
-              .map((line) => `<p style="margin-top:0px; margin-bottom:8px;">${line}</p>`)
+              .map(
+                (line) =>
+                  `<p style="margin-top:0px; margin-bottom:8px; word-break:break-all;">${line}</p>`,
+              )
               .join('')}
             <p style="margin-top:0px; margin-bottom:8px; width:100%; text-align:end;">by <a href="https://instagram.com/palestinosrosario" target="_blank">@palestinosrosario</a></p>
           </div>
@@ -257,11 +260,17 @@ export class UsersService {
         to: 'info@connectpalestine.org',
         bcc: mails,
         subject: subject,
-        html: `<div style="width:100%; max-width:500px; padding:4px; border-radius:6px; font-size:14px; font-family:Arial, Helvetica, sans-serif; margin:auto;">
+        html: `<div style="width:100%; max-width:500px; padding:4px; border-radius:6px; font-size:14px; font-family:Arial, Helvetica, sans-serif;">
           <div style="text-align:center;"><img style="width:50%;" src="${process.env.PRODUCTION_URL ? process.env.PRODUCTION_URL : process.env.DEV_URL}/public/logo.png" alt="Logo Connect Palestine" ></div>
           <div style="width:100%; margin:auto;">
             <h2 style=" font-size:18px; width:100%;">${title}</h2>
-            <p style="margin-top:0px; margin-bottom:8px;">${message}</p>
+            ${message
+              .split('\n')
+              .map(
+                (line) =>
+                  `<p style="margin-top:0px; margin-bottom:8px; word-break:break-all;">${line}</p>`,
+              )
+              .join('')}
             <p style="margin-top:0px; margin-bottom:8px; width:100%; text-align:end;">by <a href="https://instagram.com/palestinosrosario" target="_blank">@palestinosrosario</a></p>
           </div>
           </div> `,
