@@ -45,18 +45,19 @@ export class UsersService {
         const resend = new Resend(process.env.RESEND_API_KEY);
 
         const { data, error } = await resend.emails.send({
-          from: `Palestine community <conectados@connectpalestine.org>`,
+          from: `Connect Palestine <conectados@connectpalestine.org>`,
           to: [userData.email],
           subject: '¡Bienvenid@ a Connect Palestine! 🇵🇸 🌍',
           html: `<div style="width:100%; max-width:500px; padding:4px; border-radius:6px; font-size:14px; font-family:Arial, Helvetica, sans-serif;">
           <div style="text-align:center;"><img style="width:50%;" src="${process.env.PRODUCTION_URL ? process.env.PRODUCTION_URL : process.env.DEV_URL}/public/logo.png" alt="Logo Connect Palestine" ></div>
           <div style="width:100%; margin:auto;">
             <h2 style=" font-size:18px; width:100%;">Hola <strong>${userData.name}</strong></h2>
-            <p style="margin-top:0px; margin-bottom:8px;">¡Gracias por unirte a Connect Palestine! Estamos encantados de que formes parte de nuestra comunidad, un espacio digital donde la cultura, historia y actualidad de Palestina encuentran su voz.</p>
-            <p style="margin-top:0px; margin-bottom:8px;">Como suscriptor, recibirás nuestras últimas actualizaciones sobre películas, series, arte, gastronomía, música, y mucho más conectado con Palestina. También te mantendremos al tanto de eventos y proyectos especiales, para que no te pierdas ninguna oportunidad de conectar y ser parte de esta red de apoyo y difusión.</p>
-            <p style="margin-top:0px; margin-bottom:8px;">Si tienes preguntas o sugerencias, no dudes en escribirnos. Nos encantaría saber cómo podemos mejorar tu experiencia en Connect Palestine.</p>
-            <p style="margin-top:0px; margin-bottom:8px;">¡Gracias por sumarte! Nos vemos pronto en tu bandeja de entrada.</p>
-            <p style="margin-top:0px; margin-bottom:8px; width:100%; ">Un fuerte saludo, El equipo de Connect Palestine</p>
+            <p style="margin-top:0px; margin-bottom:8px;">¡Gracias por unirte a <strong>Connect Palestine!</strong></p>
+            <p style="margin-top:0px; margin-bottom:8px;">Estamos encantados de que formes parte de nuestra comunidad, un espacio digital donde la cultura, historia y actualidad de Palestina encuentran su voz.</p>
+            <p style="margin-top:0px; margin-bottom:8px;">Como suscriptor, recibirás nuestras últimas actualizaciones sobre <strong>películas, series, arte, gastronomía, música</strong>, y mucho más conectado con Palestina. También te mantendremos al tanto de eventos y proyectos especiales, para que no te pierdas ninguna oportunidad de conectar y ser parte de esta red de apoyo y difusión.</p>
+            <p style="margin-top:0px; margin-bottom:8px;">Si tenés preguntas o sugerencias, no dudes en escribirnos. Nos encantaría saber cómo podemos mejorar tu experiencia en <strong>Connect Palestine.</strong></p>
+            <p style="margin-top:0px; margin-bottom:8px; width:100%; ">¡Gracias por sumarte! Nos vemos pronto en tu bandeja de entrada.</p>
+             <p style="margin-top:0px; margin-bottom:8px; width:100%; ">Un fuerte saludo, El equipo de <strong>Connect Palestine</strong></p>
             <p style="margin-top:0px; margin-bottom:8px; width:100%; text-align:end;">by <a href="https://instagram.com/palestinosrosario" target="_blank">@palestinosrosario</a></p>
           </div>
           </div>`,
@@ -165,7 +166,7 @@ export class UsersService {
       const resend = new Resend(process.env.RESEND_API_KEY);
 
       const { data, error } = await resend.emails.send({
-        from: `Palestine community <conectados@connectpalestine.org>`,
+        from: `Connect Palestine <conectados@connectpalestine.org>`,
         to: userEmail,
         subject: subject,
         html: `<div style="width:100%; max-width:500px; padding:4px; border-radius:6px; font-size:14px; font-family:Arial, Helvetica, sans-serif;">
@@ -256,7 +257,7 @@ export class UsersService {
       const resend = new Resend(process.env.RESEND_API_KEY);
 
       const { data, error } = await resend.emails.send({
-        from: `Palestine community <conectados@connectpalestine.org>`,
+        from: `Connect Palestine <conectados@connectpalestine.org>`,
         to: 'info@connectpalestine.org',
         bcc: mails,
         subject: subject,
