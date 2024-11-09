@@ -15,19 +15,27 @@ export class UsersService {
           email: userData.email,
         },
       });
-      if (userExists && userData.messages.length > 0) {
-        await this.prisma.user.update({
-          where: {
-            email: userData.email,
-          },
-          data: {
-            messages: [...userExists.messages, userData.messages as string],
-          },
-        });
-        return {
-          status: 200,
-          message: 'User messages updated successfully',
-        };
+      if (userExists ) {
+        if(userData.messages.length > 0){
+          await this.prisma.user.update({
+            where: {
+              email: userData.email,
+            },
+            data: {
+              messages: [...userExists.messages, userData.messages as string],
+            },
+          });
+          return {
+            status: 200,
+            message: 'User messages updated successfully',
+          };
+        } else{
+          return {
+            status:200,
+            message:"User already created"
+          }
+        }
+        
       }
       const newUser = await this.prisma.user.create({
         data: {
